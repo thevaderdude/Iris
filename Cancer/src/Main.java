@@ -9,7 +9,7 @@ public class Main {
 		//System.out.println(b.cost());
 		b.scale();
 		b.test();
-		b.learn(400);
+		b.learn(100);
 		b.test();
 	//	System.out.println(b.cost());
 	}

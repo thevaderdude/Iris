@@ -73,27 +73,31 @@ public class Brain {
 	
 	public void test() {
 		double percent = 0;
-		for (int i = 0; i < m; i++) {
+		for (int i = 500; i < m; i++) {
 			if(this.h(i) > 0.5 && y[i] > 0.5)
 				percent++;
 			else if (this.h(i) < 0.5 && y[i] < 0.5) {
 				percent++;
 			}
 		}
-		System.out.println(percent / m + " Correct");
+		System.out.println(percent / 69 + " Correct");
 	}
 	
 	public void learn(int epoch) {
 		System.out.println(this.cost());
 		for (int e = 0; e < epoch; e++) {
 			LayerWeight[] tempP = new LayerWeight[layers-1];
-			tempP[0] = new LayerWeight(p[0].getI(), p[0].getJ(), p[0].getL());
-			tempP[1] = new LayerWeight(p[1].getI(), p[1].getJ(), p[1].getL());
-			for (int m1 = 0; m1 < m; m1++) {
+			//tempP[0] = new LayerWeight(p[0].getI(), p[0].getJ(), p[0].getL());
+			//tempP[1] = new LayerWeight(p[1].getI(), p[1].getJ(), p[1].getL());
+			for (int m1 = 0; m1 < 50; m1++) {
+				tempP[0] = new LayerWeight(p[0].getI(), p[0].getJ(), p[0].getL());
+				tempP[1] = new LayerWeight(p[1].getI(), p[1].getJ(), p[1].getL());
+
+				for (int m2 = m1 *10; m2 < (m1 * 10) + 10; m2++) {
 				for (int layer = 0; layer < layers-1; layer++) {
 					for (int i = 0; i < p[layer].getI(); i++) {
 						for (int j = 0; j < p[layer].getJ(); j++) {
-							tempP[layer].getP()[i][j] = this.d(layer + 1, i, m1) * this.a(layer, j, m1);
+							tempP[layer].getP()[i][j] =+ this.d(layer + 1, i,m2) * this.a(layer, j,m2);
 						}
 					}
 				}
@@ -102,13 +106,14 @@ public class Brain {
 			for (int layer = 0; layer < layers-1; layer++) {
 				for (int i = 0; i < p[layer].getI(); i++) {
 					for (int j = 0; j < p[layer].getJ(); j++) {
-						tempP[layer].getP()[i][j] /= m;
+						tempP[layer].getP()[i][j] /= 10;
 						tempP[layer].getP()[i][j] *= ls;
 						//System.out.println(tempP[layer].getP()[i][j]);
 						p[layer].getP()[i][j] -= tempP[layer].getP()[i][j];
 						
 					}
 				}
+			}
 			}
 			System.out.println(e + "  " + this.cost());
 		}
@@ -119,13 +124,8 @@ public class Brain {
 	public double d(int lp, int jp, int mp) {
 		
 		if (lp == layers-1) {
-			//System.out.println("EVANNNNN");
 			return this.a(lp, jp, mp) - y[mp];
 			
-		}
-	//	System.out.println("Goteem layer " + lp + "  " + jp);
-		if (jp == 1 && lp == 1) {
-			//System.out.println("Bro u rarted");
 		}
 		double d = 0;
 		for (int i = 0; i < p[lp].getI(); i++) {
@@ -139,9 +139,7 @@ public class Brain {
 	public double a(int lp, int ip, int mp) {
 		if (lp == 0)
 			return x[mp][ip];
-		//System.out.println("did x");
 		if (ip == 0 && lp == 1) {
-			//System.out.println("Gold");
 			return 1;
 		}
 		double a = 0;
@@ -149,7 +147,6 @@ public class Brain {
 			a += this.a(lp-1, j, mp) * p[lp-1].getP()[ip][j];
 			
 		}
-		//System.out.println("did " + lp + ", " + ip);
 		return this.sigmoid(a);
 	}
 	
