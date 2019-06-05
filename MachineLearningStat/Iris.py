@@ -3,8 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 from matplotlib import pylab
-import plotly.plotly as py
-import plotly.graph_objs as go
+
 
 x = np.zeros((150, 5))
 y = np.zeros((150, 3))
@@ -74,6 +73,9 @@ def cost():
 
 
 def learn(epoch):
+    global x, y
+    x = x_train
+    y = y_train
     for i in range(0, epoch):
         p_temp = np.zeros((3, 5))
         h1 = np.zeros((105, 3))
@@ -100,7 +102,7 @@ def test():
         # print(str(max_ind(h1[i])) + '  ' + str(max_ind(y[i])))
         if max_ind(h1[i]) == max_ind(y[i]):
             num_right += 1
-    return num_right / 45
+    return 100 * num_right / 45
 
 
 def max_ind(par):
@@ -124,23 +126,32 @@ def reset_vars():
 
 
 def get_dat_trials():
-    x_plot = np.zeros(50)
-    y_plot = np.zeros(50)
-    for i in range(0, 50):
-        load_data(.003)
-        x_plot[i] = 5000 * i
-        learn(5000 * i)
-        y_plot[i] = test()
-        reset_vars()
+    n = 50
+    x_plot = np.zeros(n)
+    y_plot = np.zeros(n)
+    load_data(.003)
+    for i in range(0, n):
+        x_plot[i] = 1 + 10 * i
+        learn(1 + 5 * i)
+        y_plot[i] = cost()
+        # y_plot[i] = test()
+        # reset_vars()
+    l_x_plot = np.log(x_plot)
+    l_y_plot = np.log(y_plot)
 
-    slope, intercept, r_value, p_value, std_error = stats.linregress(x_plot, y_plot)
-    mn = np.min(x_plot)
-    mx = np.max(x_plot)
-    x1 = np.linspace(mn, mx, 50)
-    line = slope * x_plot + intercept
-    plt.plot(x_plot, y_plot, 'ob')
+    slope, intercept, r_value, p_value, std_error = stats.linregress(l_x_plot, l_y_plot)
+    mn = np.min(l_x_plot)
+    mx = np.max(l_x_plot)
+    x1 = np.linspace(mn, mx, n)
+    line = slope * l_x_plot + intercept
+    plt.figure(1)
+    plt.plot(l_x_plot, l_y_plot, 'ob')
     plt.plot(x1, line, '-r')
     pylab.title("Effect of Learning Cycles on Performance of Iris  Algorithm")
+    print(r_value)
+    res = line - l_y_plot
+    plt.figure(0)
+    plt.plot(l_x_plot, res, 'or')
     plt.show()
 
 
@@ -152,9 +163,13 @@ def plot_test():
     mx = np.max(x_plot)
     x1 = np.linspace(mn, mx, 50)
     line = slope * x_plot + intercept
+    plt.figure(1)
     plt.plot(x_plot, y_plot, 'ob')
     plt.plot(x1, line, '-r')
     pylab.title("Effect of Learning Cycles on Performance of Iris  Algorithm")
+    res = line - y_plot
+    plt.figure(0)
+    plt.plot(x_plot, res, 'or')
     plt.show()
 
 
@@ -166,4 +181,5 @@ get_dat_trials()
 # load_data(.003)
 # learn(500)
 # print(test())
+# plot_test()
 
