@@ -220,16 +220,17 @@ def get_dat_learning():
     x_plot = np.zeros(n)
     y_plot = np.zeros(n)
     for i in range(0, n):
-        l = .001 + .01 * i
+        l = .001 + .002 * i
         x_plot[i] = l
         load_data(l, False)
-        learn(2000)
+        learn(5000)
         # y_plot[i] = cost()
         y_plot[i] = test()
         reset_vars()
-    l_x_plot = (x_plot)
+    l_x_plot = np.log(x_plot)
+    l_x_plot = np.log(l_x_plot)
     l_y_plot = (y_plot)
-    p1 = np.polyfit(l_x_plot, l_y_plot, 3)
+    p1 = np.polyfit(l_x_plot, l_y_plot, 1)
     slope, intercept, r_value, p_value, std_error = stats.linregress(l_x_plot, l_y_plot)
     mn = np.min(l_x_plot)
     mx = np.max(l_x_plot)
