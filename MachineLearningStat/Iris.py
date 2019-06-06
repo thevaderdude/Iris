@@ -187,12 +187,12 @@ def get_dat_trials():
     y_plot = np.zeros(n)
     load_data(.003, False)
     for i in range(0, n):
-        x_plot[i] = 130 + (10 * i)
+        x_plot[i] = x_plot[i-1] + 130 + (10 * i)
         learn(130 + (10 * i))
         # y_plot[i] = cost()
         y_plot[i] = test()
         # reset_vars()
-    l_x_plot = np.sqrt(x_plot)
+    l_x_plot = np.log(x_plot)
     l_y_plot = (y_plot)
     p1 = np.polyfit(l_x_plot, l_y_plot, 1)
     slope, intercept, r_value, p_value, std_error = stats.linregress(l_x_plot, l_y_plot)
@@ -206,7 +206,42 @@ def get_dat_trials():
     pylab.title("Effect of Learning Cycles on Performance of Iris  Algorithm")
     print(r_value)
     print(p_value)
-    res = l_y_plot - np.polyval(p1, x1)
+    res = l_y_plot - np.polyval(p1, l_x_plot)
+    plt.figure(0)
+    plt.plot(l_x_plot, res, 'or')
+    line2 = np.zeros(50)
+    plt.plot(x1, line2, '-r')
+    plt.plot()
+    plt.show()
+
+
+def get_dat_learning():
+    n = 50
+    x_plot = np.zeros(n)
+    y_plot = np.zeros(n)
+    for i in range(0, n):
+        l = .001 + .01 * i
+        x_plot[i] = l
+        load_data(l, False)
+        learn(2000)
+        # y_plot[i] = cost()
+        y_plot[i] = test()
+        reset_vars()
+    l_x_plot = (x_plot)
+    l_y_plot = (y_plot)
+    p1 = np.polyfit(l_x_plot, l_y_plot, 3)
+    slope, intercept, r_value, p_value, std_error = stats.linregress(l_x_plot, l_y_plot)
+    mn = np.min(l_x_plot)
+    mx = np.max(l_x_plot)
+    x1 = np.linspace(mn, mx, n)
+    line = slope * l_x_plot + intercept
+    plt.figure(1)
+    plt.plot(l_x_plot, l_y_plot, 'ob')
+    plt.plot(x1, np.polyval(p1, x1), '-r')
+    pylab.title("Effect of Learning Speed on Performance of Iris Algorithm")
+    print(r_value)
+    print(p_value)
+    res = l_y_plot - np.polyval(p1, l_x_plot)
     plt.figure(0)
     plt.plot(l_x_plot, res, 'or')
     line2 = np.zeros(50)
@@ -233,7 +268,7 @@ def plot_test():
     plt.show()
 
 
-get_dat_trials()
+get_dat_learning()
 # load_data(.003)
 # learn(500)
 # print(test())
