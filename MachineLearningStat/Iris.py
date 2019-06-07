@@ -1,4 +1,4 @@
-iimport numpy as np
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
@@ -128,7 +128,7 @@ def learn(epoch):
             p_temp = ls * (np.dot(np.transpose(h1 - y), x)) / 150
 
             p -= p_temp
-            if i % 100 == 0:
+            if i % 1000 == 0:
                 print(str(i) + '  ' + str(test()))
 
 
@@ -185,13 +185,14 @@ def get_dat_trials():
     n = 50
     x_plot = np.zeros(n)
     y_plot = np.zeros(n)
-    load_data(.003, False)
+
     for i in range(0, n):
-        x_plot[i] = x_plot[i-1] + 130 + (10 * i)
-        learn(130 + (10 * i))
+        load_data(.01, False)
+        x_plot[i] = 130 + (50 * i)
+        learn(130 + (50 * i))
         # y_plot[i] = cost()
         y_plot[i] = test()
-        # reset_vars()
+        reset_vars()
     l_x_plot = np.log(x_plot)
     l_y_plot = (y_plot)
     p1 = np.polyfit(l_x_plot, l_y_plot, 1)
@@ -206,6 +207,9 @@ def get_dat_trials():
     pylab.title("Effect of Learning Cycles on Performance of Iris  Algorithm")
     print(r_value)
     print(p_value)
+    print(std_error)
+    print(slope)
+    print(intercept)
     res = l_y_plot - np.polyval(p1, l_x_plot)
     plt.figure(0)
     plt.plot(l_x_plot, res, 'or')
@@ -220,14 +224,15 @@ def get_dat_learning():
     x_plot = np.zeros(n)
     y_plot = np.zeros(n)
     for i in range(0, n):
-        l = .001 + .001 * i
+        l = .001 + 5 * i
         x_plot[i] = l
         load_data(l, False)
-        learn(1000)
+        learn(5000)
         # y_plot[i] = cost()
         y_plot[i] = test()
         reset_vars()
-    l_x_plot = np.log(x_plot)
+        print(i)
+    l_x_plot = (x_plot)
     # l_x_plot = np.log(l_x_plot)
     l_y_plot = (y_plot)
     p1 = np.polyfit(l_x_plot, l_y_plot, 1)
@@ -242,6 +247,9 @@ def get_dat_learning():
     pylab.title("Effect of Learning Speed on Performance of Iris Algorithm")
     print(r_value)
     print(p_value)
+    print(std_error)
+    print(slope)
+    print(intercept)
     res = l_y_plot - np.polyval(p1, l_x_plot)
     plt.figure(0)
     plt.plot(l_x_plot, res, 'or')
@@ -269,7 +277,7 @@ def plot_test():
     plt.show()
 
 
-get_dat_learning()
+get_dat_trials()
 # load_data(.003)
 # learn(500)
 # print(test())
