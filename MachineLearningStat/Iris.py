@@ -1,4 +1,4 @@
-import numpy as np
+iimport numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
@@ -128,8 +128,8 @@ def learn(epoch):
             p_temp = ls * (np.dot(np.transpose(h1 - y), x)) / 150
 
             p -= p_temp
-            if i % 1000 == 0:
-                print(str(i) + '  ' + str(cost()))
+            if i % 100 == 0:
+                print(str(i) + '  ' + str(test()))
 
 
 def test():
@@ -220,15 +220,15 @@ def get_dat_learning():
     x_plot = np.zeros(n)
     y_plot = np.zeros(n)
     for i in range(0, n):
-        l = .001 + .002 * i
+        l = .001 + .001 * i
         x_plot[i] = l
         load_data(l, False)
-        learn(5000)
+        learn(1000)
         # y_plot[i] = cost()
         y_plot[i] = test()
         reset_vars()
     l_x_plot = np.log(x_plot)
-    l_x_plot = np.log(l_x_plot)
+    # l_x_plot = np.log(l_x_plot)
     l_y_plot = (y_plot)
     p1 = np.polyfit(l_x_plot, l_y_plot, 1)
     slope, intercept, r_value, p_value, std_error = stats.linregress(l_x_plot, l_y_plot)
